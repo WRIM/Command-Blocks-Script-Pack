@@ -69,9 +69,11 @@ for (i=0; i<posList.length; i++)	//Przetwarzanie ciągu
 	{
 		if (argv[2] == "true")
 		{
-			//player.print('oki');
+			nbt = new HashMap(commandBlock.getNbtData().getValue());
+			var mc11 = (nbt.get("id").getValue() == 'Control') ? false : true;
+		
 			nbt = new HashMap();
-			nbt.put("id", new StringTag("Control"));
+			nbt.put("id", new StringTag(mc11 ? "minecraft:command_block" : "Control"));
 			nbt.put("auto", new ByteTag(1));
 			nbt.put("Command", new StringTag("/help"));
 			nbt = new CompoundTag(nbt);

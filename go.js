@@ -336,7 +336,7 @@ function createScoreObjAddCmds() {
 			cmd: 'scoreboard objectives add ' + inputScoreboard + '_A dummy',
 			tag: 'none'
 		}, {
-			cmd: 'summon ArmorStand ~' + allCommands[0].posX + ' ~' + allCommands[0].posY + ' ~' + allCommands[0].posZ + ' {CustomName:TogAct,Marker:1,NoGravity:1,Invisible:1}',
+			cmd: 'summon ' + (mc11 ? 'armor_stand' : 'ArmorStand') + ' ~' + allCommands[0].posX + ' ~' + allCommands[0].posY + ' ~' + allCommands[0].posZ + ' {CustomName:TogAct,Marker:1,NoGravity:1,Invisible:1}',
 			tag: 'none'
 		});
 	}
@@ -479,7 +479,7 @@ function formatForClickevent(signJsonData, signLines, signLoc, signHeightY) {
 		if (signLines[i][b].lineCommand == 'TOGGLEACTIVE') {
 			scoreboardObjInUse[2] = true;
 			if (b == 0) {
-				var clickeventCommand = ',\\\\\\"clickEvent\\\\\\":{\\\\\\"action\\\\\\":\\\\\\"run_command\\\\\\",\\\\\\"value\\\\\\":\\\\\\"' + ('scoreboard players add @e[type=ArmorStand,name=TogAct,c=1] ' + toggleActiveScore + ' 1') + '\\\\\\"}';
+				var clickeventCommand = ',\\\\\\"clickEvent\\\\\\":{\\\\\\"action\\\\\\":\\\\\\"run_command\\\\\\",\\\\\\"value\\\\\\":\\\\\\"' + ('scoreboard players add @e[type=' + (mc11 ? 'armor_stand' : 'ArmorStand') + ',name=TogAct,c=1] ' + toggleActiveScore + ' 1') + '\\\\\\"}';
 			} else if (b == 1) {
 				var clickeventCommand = ',\\\\\\"clickEvent\\\\\\":{\\\\\\"action\\\\\\":\\\\\\"run_command\\\\\\",\\\\\\"value\\\\\\":\\\\\\"' + ('execute @e[score_' + toggleActiveScore + '_min=1,score_' + toggleActiveScore + '=1] ~ ~ ~ blockdata ~ ~ ~ {auto:0}') + '\\\\\\"}';
 			} else if (b == 2) {
@@ -496,7 +496,7 @@ function formatForClickevent(signJsonData, signLines, signLoc, signHeightY) {
 		if (signLines[i][b].lineCommand == 'TOGGLEACTIVE') {
 			scoreboardObjInUse[2] = true;
 			if (b == 0) {
-				var clickeventCommand = ',Text' + (b + 1) + ':"{\\\\\\"text\\\\\\":\\\\\\"\\\\\\",\\\\\\"clickEvent\\\\\\":{\\\\\\"action\\\\\\":\\\\\\"run_command\\\\\\",\\\\\\"value\\\\\\":\\\\\\"' + ('scoreboard players add @e[type=ArmorStand,name=TogAct,c=1] ' + toggleActiveScore + ' 1') + '\\\\\\"}}"';
+				var clickeventCommand = ',Text' + (b + 1) + ':"{\\\\\\"text\\\\\\":\\\\\\"\\\\\\",\\\\\\"clickEvent\\\\\\":{\\\\\\"action\\\\\\":\\\\\\"run_command\\\\\\",\\\\\\"value\\\\\\":\\\\\\"' + ('scoreboard players add @e[type=' + (mc11 ? 'armor_stand' : 'ArmorStand') + ',name=TogAct,c=1] ' + toggleActiveScore + ' 1') + '\\\\\\"}}"';
 			} else if (b == 1) {
 				var clickeventCommand = ',Text' + (b + 1) + ':"{\\\\\\"text\\\\\\":\\\\\\"\\\\\\",\\\\\\"clickEvent\\\\\\":{\\\\\\"action\\\\\\":\\\\\\"run_command\\\\\\",\\\\\\"value\\\\\\":\\\\\\"' + ('execute @e[score_' + toggleActiveScore + '_min=1,score_' + toggleActiveScore + '=1] ~ ~ ~ blockdata ~ ~ ~ {auto:0}') + '\\\\\\"}}"';
 			} else if (b == 2) {
@@ -811,8 +811,8 @@ function generateFloorCrafting(floorCraftingCommand) {
 				currentDamage = ',Damage:' + floorCraft[f].damage;
 			if (floorCraft[f].nbt !== '{}')
 				currentNBT = ',tag:' + floorCraft[f].nbt;
-			floorCraftingCommandArr[floorCraftingCommandArr.length] = {cmd: executeSelector + 'summon Item ~ ~0.5 ~ {Item:{id:minecraft:' + floorCraft[f].item + currentDamage + currentNBT + ',Count:1}}', tag: 'none'};
-			floorCraftingCommandArr[floorCraftingCommandArr.length] = {cmd: executeSelector + 'kill @e[type=Item,r=3,score_' + floorCraftingScoreboard + '_min=' + startIndex + ',score_' + floorCraftingScoreboard + '=' + floorCraftingCurIndex + ']', tag: 'none'};
+			floorCraftingCommandArr[floorCraftingCommandArr.length] = {cmd: executeSelector + 'summon ' + (mc11 ? 'item' : 'Item') + ' ~ ~0.5 ~ {Item:{id:minecraft:' + floorCraft[f].item + currentDamage + currentNBT + ',Count:1}}', tag: 'none'};
+			floorCraftingCommandArr[floorCraftingCommandArr.length] = {cmd: executeSelector + 'kill @e[type=' + (mc11 ? 'item' : 'Item') + ',r=3,score_' + floorCraftingScoreboard + '_min=' + startIndex + ',score_' + floorCraftingScoreboard + '=' + floorCraftingCurIndex + ']', tag: 'none'};
 		}
 	}
 
@@ -1155,19 +1155,19 @@ function generateOutputCommand() {
 		if (allCommands[i].tag == 'hopper1') {
 			// This item is the first hopper, which should hold the item from the start.
 			doNormalProcedure = false;
-			finalInitCmdArray[finalInitCmdArray.length] = ',{id:MinecartCommandBlock,Command:setblock ~' + allCommands[i].posX + ' ~' + allCommands[i].posY + ' ~' + allCommands[i].posZ + ' hopper ' + dirToDamage(fixDirForOrientation("east", parseInt(arg_orientation)), false) + ' replace {Items:[{id:minecraft:stone,Count:1}]}}';
+			finalInitCmdArray[finalInitCmdArray.length] = ',{id:' + (mc11 ? 'commandblock_minecart' : 'MinecartCommandBlock') + ',Command:setblock ~' + allCommands[i].posX + ' ~' + allCommands[i].posY + ' ~' + allCommands[i].posZ + ' hopper ' + dirToDamage(fixDirForOrientation("east", parseInt(arg_orientation)), false) + ' replace {Items:[{id:minecraft:stone,Count:1}]}}';
 
 		} else if (allCommands[i].tag == 'hopper2') {
 			allCommands[i].direction == 'west';
 			// This item is the first hopper, which should hold the item from the start.
 			doNormalProcedure = false;
-			finalInitCmdArray[finalInitCmdArray.length] = ',{id:MinecartCommandBlock,Command:setblock ~' + allCommands[i].posX + ' ~' + allCommands[i].posY + ' ~' + allCommands[i].posZ + ' hopper ' + dirToDamage(fixDirForOrientation("west", parseInt(arg_orientation)), false) + '}';
+			finalInitCmdArray[finalInitCmdArray.length] = ',{id:' + (mc11 ? 'commandblock_minecart' : 'MinecartCommandBlock') + ',Command:setblock ~' + allCommands[i].posX + ' ~' + allCommands[i].posY + ' ~' + allCommands[i].posZ + ' hopper ' + dirToDamage(fixDirForOrientation("west", parseInt(arg_orientation)), false) + '}';
 
 		} else if (allCommands[i].tag == 'hopper3') {
 			allCommands[i].direction == 'east';
 			// This item is the first hopper, which should hold the item from the start.
 			doNormalProcedure = false;
-			finalInitCmdArray[finalInitCmdArray.length] = ',{id:MinecartCommandBlock,Command:setblock ~' + allCommands[i].posX + ' ~' + allCommands[i].posY + ' ~' + allCommands[i].posZ + ' unpowered_comparator ' + dirToDamageComparator(fixDirForOrientation("east", parseInt(arg_orientation))) + '}';
+			finalInitCmdArray[finalInitCmdArray.length] = ',{id:' + (mc11 ? 'commandblock_minecart' : 'MinecartCommandBlock') + ',Command:setblock ~' + allCommands[i].posX + ' ~' + allCommands[i].posY + ' ~' + allCommands[i].posZ + ' unpowered_comparator ' + dirToDamageComparator(fixDirForOrientation("east", parseInt(arg_orientation))) + '}';
 
 		} else {
 			if (allCommands[i].repeating == true) {
@@ -1209,18 +1209,18 @@ function generateOutputCommand() {
 				}
 
 				if (useBlockdata) {
-					finalInitCmdArray[finalInitCmdArray.length] = ',{id:MinecartCommandBlock,Command:blockdata ~' + allCommands[i].posX + ' ~' + allCommands[i].posY + ' ~' + allCommands[i].posZ + ' {' + autoString + allCommands[i].trackoutput + 'Command:' + commandQuoteWrap + allCommands[i].cmd + commandQuoteWrap + '}}';
+					finalInitCmdArray[finalInitCmdArray.length] = ',{id:' + (mc11 ? 'commandblock_minecart' : 'MinecartCommandBlock') + ',Command:blockdata ~' + allCommands[i].posX + ' ~' + allCommands[i].posY + ' ~' + allCommands[i].posZ + ' {' + autoString + allCommands[i].trackoutput + 'Command:' + commandQuoteWrap + allCommands[i].cmd + commandQuoteWrap + '}}';
 				} else {
-					finalInitCmdArray[finalInitCmdArray.length] = ',{id:MinecartCommandBlock,Command:setblock ~' + allCommands[i].posX + ' ~' + allCommands[i].posY + ' ~' + allCommands[i].posZ + ' ' + typeString + 'command_block ' + dirToDamage(allCommands[i].direction, allCommands[i].isCond) + ' 0 {' + autoString + allCommands[i].trackoutput + 'Command:' + commandQuoteWrap + allCommands[i].cmd + commandQuoteWrap + '}}';
+					finalInitCmdArray[finalInitCmdArray.length] = ',{id:' + (mc11 ? 'commandblock_minecart' : 'MinecartCommandBlock') + ',Command:setblock ~' + allCommands[i].posX + ' ~' + allCommands[i].posY + ' ~' + allCommands[i].posZ + ' ' + typeString + 'command_block ' + dirToDamage(allCommands[i].direction, allCommands[i].isCond) + ' 0 {' + autoString + allCommands[i].trackoutput + 'Command:' + commandQuoteWrap + allCommands[i].cmd + commandQuoteWrap + '}}';
 				}
 				
 			} else {
 				// Omit the Command:"" part if there is no command specified
 				if (useBlockdata) {
-					//finalInitCmdArray[finalInitCmdArray.length] = ',{id:MinecartCommandBlock,Command:blockdata ~' + allCommands[i].posX + ' ~' + allCommands[i].posY + ' ~' + allCommands[i].posZ + ' ' + typeString + 'command_block ' + dirToDamage(allCommands[i].direction, allCommands[i].isCond) + '}';
+					//finalInitCmdArray[finalInitCmdArray.length] = ',{id:' + (mc11 ? 'commandblock_minecart' : 'MinecartCommandBlock') + ',Command:blockdata ~' + allCommands[i].posX + ' ~' + allCommands[i].posY + ' ~' + allCommands[i].posZ + ' ' + typeString + 'command_block ' + dirToDamage(allCommands[i].direction, allCommands[i].isCond) + '}';
 					// There doesn't have to be anything here for the blockdata version since the command blocks are already placed using /fill
 				} else {
-					finalInitCmdArray[finalInitCmdArray.length] = ',{id:MinecartCommandBlock,Command:setblock ~' + allCommands[i].posX + ' ~' + allCommands[i].posY + ' ~' + allCommands[i].posZ + ' ' + typeString + 'command_block ' + dirToDamage(allCommands[i].direction, allCommands[i].isCond) + '}';
+					finalInitCmdArray[finalInitCmdArray.length] = ',{id:' + (mc11 ? 'commandblock_minecart' : 'MinecartCommandBlock') + ',Command:setblock ~' + allCommands[i].posX + ' ~' + allCommands[i].posY + ' ~' + allCommands[i].posZ + ' ' + typeString + 'command_block ' + dirToDamage(allCommands[i].direction, allCommands[i].isCond) + '}';
 				}
 				
 			}
@@ -1302,13 +1302,13 @@ function generateOutputCommand() {
 
 					checkContinuous--;
 
-					finalInitCmdArray[finalInitCmdArray.length] = ',{id:MinecartCommandBlock,Command:fill ~'+allCommands[i].posX+' ~'+allCommands[i].posY+' ~'+allCommands[i].posZ+' ~'+allCommands[i+checkContinuous].posX+' ~'+allCommands[i+checkContinuous].posY+' ~'+allCommands[i+checkContinuous].posZ+' ' + typeString + 'command_block ' + dirToDamage(allCommands[i].direction, allCommands[i].isCond) + '}';
+					finalInitCmdArray[finalInitCmdArray.length] = ',{id:' + (mc11 ? 'commandblock_minecart' : 'MinecartCommandBlock') + ',Command:fill ~'+allCommands[i].posX+' ~'+allCommands[i].posY+' ~'+allCommands[i].posZ+' ~'+allCommands[i+checkContinuous].posX+' ~'+allCommands[i+checkContinuous].posY+' ~'+allCommands[i+checkContinuous].posZ+' ' + typeString + 'command_block ' + dirToDamage(allCommands[i].direction, allCommands[i].isCond) + '}';
 
 					i += checkContinuous; // skip all of the command blocks that were already included in this /fill command
 
 				} else {
 
-					finalInitCmdArray[finalInitCmdArray.length] = ',{id:MinecartCommandBlock,Command:setblock ~'+allCommands[i].posX+' ~'+allCommands[i].posY+' ~'+allCommands[i].posZ+' ' + typeString + 'command_block ' + dirToDamage(allCommands[i].direction, allCommands[i].isCond) + '}';
+					finalInitCmdArray[finalInitCmdArray.length] = ',{id:' + (mc11 ? 'commandblock_minecart' : 'MinecartCommandBlock') + ',Command:setblock ~'+allCommands[i].posX+' ~'+allCommands[i].posY+' ~'+allCommands[i].posZ+' ' + typeString + 'command_block ' + dirToDamage(allCommands[i].direction, allCommands[i].isCond) + '}';
 
 				}
 
@@ -1317,7 +1317,7 @@ function generateOutputCommand() {
 		}
 
 		// MIGHT HAVE TO CHANGE THIS TO A .SPLICE() AT THE BEGINNING OF THE ARRAY
-		finalInitCmdArray[finalInitCmdArray.length] = ',{id:MinecartCommandBlock,Command:fill ~'+lowestCorner.x+' ~'+lowestCorner.y+' ~'+lowestCorner.z+' ~'+highestCorner.x+' ~'+highestCorner.y+' ~'+highestCorner.z+' chain_command_block ' + firstCmdBlockDir + '}';
+		finalInitCmdArray[finalInitCmdArray.length] = ',{id:' + (mc11 ? 'commandblock_minecart' : 'MinecartCommandBlock') + ',Command:fill ~'+lowestCorner.x+' ~'+lowestCorner.y+' ~'+lowestCorner.z+' ~'+highestCorner.x+' ~'+highestCorner.y+' ~'+highestCorner.z+' chain_command_block ' + firstCmdBlockDir + '}';
 
 	}
 
@@ -1325,9 +1325,9 @@ function generateOutputCommand() {
 	// Generate the initCmdString, which is used in the final command
 	for (i = 0; i < allInitCommands.length; i++) {
 		if (allInitCommands[i].tag == 'sign' || (allInitCommands[i].cmd.indexOf('"') === -1 && allInitCommands[i].cmd.indexOf("'") === -1)) {
-			finalInitCmdArray[finalInitCmdArray.length] = ',{id:MinecartCommandBlock,Command:' + allInitCommands[i].cmd + '}';
+			finalInitCmdArray[finalInitCmdArray.length] = ',{id:' + (mc11 ? 'commandblock_minecart' : 'MinecartCommandBlock') + ',Command:' + allInitCommands[i].cmd + '}';
 		} else {
-			finalInitCmdArray[finalInitCmdArray.length] = ',{id:MinecartCommandBlock,Command:"' + allInitCommands[i].cmd + '"}';
+			finalInitCmdArray[finalInitCmdArray.length] = ',{id:' + (mc11 ? 'commandblock_minecart' : 'MinecartCommandBlock') + ',Command:"' + allInitCommands[i].cmd + '"}';
 		}
 	}
 
@@ -1359,11 +1359,11 @@ function generateOutputCommand() {
 
 	outputCommands = [];
 
-	var outputTemplate = 'summon FallingSand ~ ~1 ~ {Block:stone,Time:1,Passengers:[{id:FallingSand,Block:redstone_block,Time:1,Passengers:[{id:FallingSand,Block:activator_rail,Time:1,Passengers:[{id:MinecartCommandBlock,Command:gamerule commandBlockOutput false}&&INITCMDSTRING&&,{id:MinecartCommandBlock,Command:setblock ~ ~ ~1 command_block 0 0 {Command:fill ~ ~-3 ~-1 ~ ~ ~ air}},{id:MinecartCommandBlock,Command:setblock ~ ~-1 ~1 redstone_block},{id:MinecartCommandBlock,Command:kill @e[type=MinecartCommandBlock,r=1]}]}]}]}';
+	var outputTemplate = 'summon ' + (mc11 ? 'falling_block' : 'FallingSand') + ' ~ ~1 ~ {Block:stone,Time:1,Passengers:[{id:' + (mc11 ? 'falling_block' : 'FallingSand') + ',Block:redstone_block,Time:1,Passengers:[{id:' + (mc11 ? 'falling_block' : 'FallingSand') + ',Block:activator_rail,Time:1,Passengers:[{id:' + (mc11 ? 'commandblock_minecart' : 'MinecartCommandBlock') + ',Command:gamerule commandBlockOutput false}&&INITCMDSTRING&&,{id:' + (mc11 ? 'commandblock_minecart' : 'MinecartCommandBlock') + ',Command:setblock ~ ~ ~1 command_block 0 0 {Command:fill ~ ~-3 ~-1 ~ ~ ~ air}},{id:' + (mc11 ? 'commandblock_minecart' : 'MinecartCommandBlock') + ',Command:setblock ~ ~-1 ~1 redstone_block},{id:' + (mc11 ? 'commandblock_minecart' : 'MinecartCommandBlock') + ',Command:kill @e[type=' + (mc11 ? 'commandblock_minecart' : 'MinecartCommandBlock') + ',r=1]}]}]}]}';
 
 	for (i = 0; i < finalInitCmdArray.length; i++) {
 		if (initCmdString.length + finalInitCmdArray[i].length + 492 + 89 > 32500) {
-			initCmdString += ',{id:MinecartCommandBlock,Command:summon FallingSand ~ ~2 ~ {Block:command_block,Time:1}}';
+			initCmdString += ',{id:' + (mc11 ? 'commandblock_minecart' : 'MinecartCommandBlock') + ',Command:summon ' + (mc11 ? 'falling_block' : 'FallingSand') + ' ~ ~2 ~ {Block:command_block,Time:1}}';
 			outputCommands[outputCommands.length] = outputTemplate.replace('&&INITCMDSTRING&&', initCmdString);
 			initCmdString = '';
 		}
@@ -1641,9 +1641,9 @@ while (editSession.getBlock(pos).getId() == IMPULSE || editSession.getBlock(pos)
 	pos = pos.add(dir);
 }
 
-//player.printRaw(input_commands.join('\n'));
-//player.print(player.getBlockTrace(6));
-//input_commands = Array('INIT:ohohoho','kupka','COND:/say {hello}');
+if (!nbt) context.checkArgs(1, 0, 'You must select command blocks (pos1 - INIT blocks, pos2 - main contraption)');
+var mc11 = (nbt.get("id").getValue() == 'Control') ? false : true;
+
 generateCompactCommand();
 
 if (show_output & 1)
@@ -1656,7 +1656,7 @@ if (show_output & 1)
 	for (i = 0; i<output_commands.length; i++)
 	{
 		nbt = new HashMap();
-		nbt.put("id", new StringTag("Control"));
+		nbt.put("id", new StringTag(mc11 ? "minecraft:command_block" : "Control"));
 		nbt.put("Command", new StringTag(output_commands[i]));
 		nbt = new CompoundTag(nbt);
 		commandBlock = new BaseBlock(IMPULSE, dir, nbt);

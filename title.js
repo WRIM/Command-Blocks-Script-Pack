@@ -93,9 +93,11 @@ for(var i = localSession.getSelection(player.getWorld()).iterator(); i.hasNext()
     
     if(block.getType() == IMPULSE || block.getType() == REPEAT || block.getType() == CHAIN)
     {
-        nbt = new HashMap(block.getNbtData().getValue());
+		nbt = new HashMap(block.getNbtData().getValue());
         
-        cmd = nbt.get("Command").getValue();
+		var mc11 = (nbt.get("id").getValue() == 'Control') ? false : true;
+
+		cmd = nbt.get("Command").getValue();
 		cmd = new String(cmd);
 		//if (!cmd.isNaN) cmd = '"' + cmd + '"';
 		
@@ -104,9 +106,9 @@ for(var i = localSession.getSelection(player.getWorld()).iterator(); i.hasNext()
 		if (cmd+'' != '')
 		{
 			nbt = new HashMap();
-			nbt.put("id", new StringTag("Control"));
+			nbt.put("id", new StringTag(mc11 ? "minecraft:command_block" : "Control"));
 			nbt.put("auto", new ByteTag(1));
-			nbt.put("Command", new StringTag('/summon ArmorStand ' + (pt.getX() + 0.5) + ' ' + (pt.getY() + (auto ? 1 : 0.999)) + ' ' + (pt.getZ() + 0.5) +
+			nbt.put("Command", new StringTag((mc11 ? '/summon armor_stand ' : '/summon ArmorStand ') + (pt.getX() + 0.5) + ' ' + (pt.getY() + (auto ? 1 : 0.999)) + ' ' + (pt.getZ() + 0.5) +
 				' {Tags:["' + generateTag(pt) + '","' + title + '","' + (auto ? title + 'Auto' : title + 'Noauto') + 
 				'"],CustomNameVisible:1,Marker:1,Invisible:1,NoGravity:1,CustomName:"' + cmd.replaceAll('\\','\\\\').replaceAll('"','\\"') + '"}'));
 			nbt = new CompoundTag(nbt);
@@ -121,7 +123,7 @@ for(var i = localSession.getSelection(player.getWorld()).iterator(); i.hasNext()
 		}
 		
 		nbt = new HashMap();
-		nbt.put("id", new StringTag("Control"));
+		nbt.put("id", new StringTag(mc11 ? "minecraft:command_block" : "Control"));
 		nbt.put("auto", new ByteTag(1));
 		nbt.put("Command", new StringTag('/kill @e[tag=' + generateTag(pt) + ']'));
 		nbt = new CompoundTag(nbt);
@@ -136,8 +138,25 @@ for(var i = localSession.getSelection(player.getWorld()).iterator(); i.hasNext()
     }	
 }
 
-nbt = new HashMap();
-nbt.put("id", new StringTag("Control"));
+if (remove)
+{
+	nbt = new HashMap();	//1.10
+	nbt.put("id", new StringTag("Control"));
+	nbt.put("auto", new ByteTag(1));
+	if (remove)
+		nbt.put("Command", new StringTag('/kill @e[tag=' + title + ']'));
+	nbt = new CompoundTag(nbt);
+
+	commandBlock = new BaseBlock(CHAIN, dirB, nbt);
+	commandBlock.setNbtData(nbt);
+	editSession.setBlock(pos, new BaseBlock(0));
+	editSession.setBlock(pos, commandBlock);
+
+	pos = pos.add(forward[dir]);
+}
+
+nbt = new HashMap();	//1.11
+nbt.put("id", new StringTag("minecraft:command_block"));
 nbt.put("auto", new ByteTag(0));
 if (remove)
 	nbt.put("Command", new StringTag('/kill @e[tag=' + title + ']'));
