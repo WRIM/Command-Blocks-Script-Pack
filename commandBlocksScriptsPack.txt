@@ -1,0 +1,42 @@
+WorldEdit command blocks CraftScripts pack
+Author: WRIM
+www.planetminecraft.com/member/wrim/
+http://minecraft.wrim.pl
+
+Algorithms used by two scripts are written by MrGarretto.
+
+All scripts can be executed with "help" argument (example: /cs put help).
+
+/cs list [mode/color] [line_numbers] [limit]
+Script starts from first block in selection (pos1) and writes to chat all commands inside blocks in chain. Commands in conditional blocks begins with ">" symbol. First argument determines output mode. Single hexadecimal number enables zebra mode. Odd lines will be in specified color, and even lines will be in most similar color (c-4, a-2 etc.). You can type (o)utput if you want copy all text from log file (output tab in launcher). (N)ozebra allows you to enable line numbering without using colors. Limit is maximum number of printed lines (set 0 to unlimited).
+
+/cs put [number] [conditional]
+Puts specific number of chain command blocks to chain. You must select (pos1) block which will be after new blocks in chain. If conditional parameter is true then command inside blocks will be "/help" so that block will continue "condition chain".
+
+/cs cut [number]
+Removes specific number of chain command blocks from chain. You must select (pos1) first block you want to remove.
+
+/cs boner [direction]
+Straighten chain of blocks. If chain is vertically and reaches height limit then continues towards x.
+Available directions: [down|up|north|south|west|east|0|1|2|3|4|5|x|y|z|x-|y-|z-|invert] (you can type first letter)
+
+/cs join [clone] [direction]
+Combine two chains of blocks to one chain. You should select any (recommended first) block of first chain (pos1) and first block of second chain (pos2). If clone parameter is false (default behavior), second chain will be removed.
+Available directions: [down|up|north|south|west|east|0|1|2|3|4|5|x|y|z|x-|y-|z-|forward] (you can type first letter)
+
+/cs title [ArmorStand_common_Tag] [Remove_Armor_Stands]
+Default: /cs title command false
+That script summons ArmorStand placed on every command block within selection. ArmorStand's name is the same as command in command block. ArmorStands have two tags. One is the same as first argument. Second is commandAuto or commandNoauto depends of "auto" state in command block. ArmorStands with Noauto tag are summonned 0.001 meters below others so they are in block by default and have shadowed names. Script creates chain of command blocks in direction you looking at because CraftScripts can't execute commands. You should execute //undo after this script ends.
+
+/cs convert
+Algorithm author: MrGarretto
+https://mrgarretto.com/entityconverter
+This is implementation of MrGarretto's entity converter. Just select all command blocks and run script. Script doesn't recognise chains. You must select all command blocks using standard WorldEdit selection method. Remember that if you open your world in Minecraft 1.11 you can't back to 1.10.
+
+/cs go [orientation] [useblockdata] [usehopperclock] [length] [width] [offset-x] [offset-y] [offset-z] [encase-caps-block data] [encase-window-block data] [encase] [destroy-sign] [deactivate-sign] [output] [scoreboard-objective-name]
+Algorithm author: MrGarretto
+https://mrgarretto.com/cmdcombiner
+That script creates one command block creation using MrGarretto's algorithm. First selected chain (pos1) will be INIT chain. All blocks in this chain will be INIT commands. You can select block other than command block. In that case will be no INIT commands. Second chain (pos2) is main chain of contraption. It must be continous, but can contains various types of command blocks. Conditional and need redstone/always active options are also saved. First block in main chain must not be conditional.
+Script supports all features available on MrGarretto's page.
+
+...If you want fix above description (I thing it's very )
